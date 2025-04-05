@@ -1,1 +1,0 @@
-Reverts all changes made during the current transaction, restoring the database to its state before the transaction began.

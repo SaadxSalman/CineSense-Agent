@@ -1,1 +1,0 @@
-To control access to a view by granting specific permissions to users or roles.

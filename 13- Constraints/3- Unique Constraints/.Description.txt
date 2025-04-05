@@ -1,1 +1,0 @@
-Ensures that all values in a column are unique across the table, allowing only distinct values.

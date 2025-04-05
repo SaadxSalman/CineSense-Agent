@@ -1,1 +1,0 @@
-TRY_CONVERT attempts to convert an expression to a specified data type. If the conversion fails, it returns NULL instead of throwing an error.

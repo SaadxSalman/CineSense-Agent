@@ -1,1 +1,0 @@
-A trigger is a set of actions automatically executed in response to certain events on a particular table or view. Triggers are commonly used for enforcing business rules, auditing changes, and maintaining the integrity of data.

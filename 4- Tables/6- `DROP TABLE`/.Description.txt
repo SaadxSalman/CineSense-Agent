@@ -1,1 +1,0 @@
-Used to delete an entire table and all its data from the database.

@@ -1,1 +1,0 @@
-Combines filtering, sorting, and limiting to refine the result set.

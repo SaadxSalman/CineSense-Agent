@@ -1,1 +1,0 @@
-The TRY...CATCH block in SQL Server is used to handle exceptions during the execution of a batch of T-SQL statements. If an error occurs within the TRY block, control is transferred to the CATCH block where the error can be handled.

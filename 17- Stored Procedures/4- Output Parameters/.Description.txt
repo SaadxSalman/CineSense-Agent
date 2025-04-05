@@ -1,1 +1,0 @@
-Return values from a stored procedure to the caller.

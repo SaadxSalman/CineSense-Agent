@@ -1,1 +1,0 @@
-AFTER triggers are used to perform actions after an INSERT, UPDATE, or DELETE operation is executed on a table.

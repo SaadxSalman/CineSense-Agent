@@ -1,1 +1,0 @@
-TRY_PARSE converts a string to a specified data type (like DATE, DATETIME, etc.), returning NULL if the conversion fails.

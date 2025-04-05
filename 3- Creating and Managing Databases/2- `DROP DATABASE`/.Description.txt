@@ -1,1 +1,0 @@
-The DROP DATABASE statement is used to delete an existing database along with all its data and structures.

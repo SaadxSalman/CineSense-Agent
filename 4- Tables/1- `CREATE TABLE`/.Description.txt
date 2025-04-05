@@ -1,1 +1,0 @@
-Used to create a new table in the database.

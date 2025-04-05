@@ -1,4 +1,0 @@
-Indexes are used to enhance query performance by allowing the database to find rows more quickly. They are especially beneficial in large datasets.
-
-
-Indexes are used implicitly by the database when you run a query. No specific syntax is needed during query execution.

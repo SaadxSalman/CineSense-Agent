@@ -1,1 +1,0 @@
-Create an index on the column(s) used for sorting.

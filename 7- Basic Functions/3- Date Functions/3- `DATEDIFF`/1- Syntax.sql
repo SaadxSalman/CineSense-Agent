@@ -1,1 +1,0 @@
-SELECT DATEDIFF(date1, date2);

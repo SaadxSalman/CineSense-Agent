@@ -1,1 +1,0 @@
-Used to create a table with partitioning to manage large datasets more efficiently.

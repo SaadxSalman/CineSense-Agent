@@ -1,1 +1,0 @@
-Transactions are managed using SQL commands like BEGIN, COMMIT, and ROLLBACK.

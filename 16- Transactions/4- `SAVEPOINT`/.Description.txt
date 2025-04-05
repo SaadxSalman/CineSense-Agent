@@ -1,1 +1,0 @@
-Sets a point within a transaction to which you can later roll back. This allows partial rollbacks within a larger transaction.

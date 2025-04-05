@@ -1,1 +1,0 @@
-Used to filter records that do not match a specified condition.

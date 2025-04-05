@@ -1,1 +1,0 @@
-Marks the start of a transaction block. All subsequent operations are part of the transaction until a COMMIT or ROLLBACK command is issued.

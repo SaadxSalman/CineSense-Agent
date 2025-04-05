@@ -1,1 +1,0 @@
-CUBE is similar to ROLLUP but generates all possible combinations of the columns specified in the GROUP BY clause, including subtotals and a grand total.

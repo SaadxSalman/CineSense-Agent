@@ -1,1 +1,0 @@
-Restricts the number of rows returned by the query.

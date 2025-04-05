@@ -1,1 +1,0 @@
-A unique index ensures that the values in the indexed column(s) are unique across all rows in the table.

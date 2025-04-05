@@ -1,1 +1,0 @@
-If a view is no longer needed, it can be removed to clean up the database schema.

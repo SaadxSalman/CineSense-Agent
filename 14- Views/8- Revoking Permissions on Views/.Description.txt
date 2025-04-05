@@ -1,1 +1,0 @@
-To remove specific permissions from users or roles on a view.

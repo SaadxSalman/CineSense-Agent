@@ -1,1 +1,0 @@
-Subqueries with EXISTS are used to check if a subquery returns any rows, typically used for existence checks.

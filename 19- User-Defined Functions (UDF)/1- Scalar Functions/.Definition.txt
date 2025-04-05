@@ -1,1 +1,0 @@
-Scalar functions return a single value for each input value. These functions can be used wherever scalar expressions are allowed in SQL.

@@ -1,1 +1,0 @@
-Remove a stored procedure from the database.

@@ -1,1 +1,0 @@
-Assigns a unique sequential integer to rows within a partition of a result set, starting at 1.

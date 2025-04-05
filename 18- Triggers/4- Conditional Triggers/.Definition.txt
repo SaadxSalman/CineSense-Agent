@@ -1,1 +1,0 @@
-Conditional triggers are used to execute actions only when certain conditions are met.

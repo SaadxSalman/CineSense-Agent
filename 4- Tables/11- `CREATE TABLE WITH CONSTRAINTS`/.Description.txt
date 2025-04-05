@@ -1,1 +1,0 @@
-Used to create a table with specific constraints like PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK, and DEFAULT.

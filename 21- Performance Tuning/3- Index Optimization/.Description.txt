@@ -1,1 +1,0 @@
-To improve query performance by creating indexes on columns that are frequently used in WHERE clauses, JOINs, or sorting operations.

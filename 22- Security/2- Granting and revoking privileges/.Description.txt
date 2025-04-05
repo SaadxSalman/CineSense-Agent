@@ -1,1 +1,0 @@
-Allow users or roles to perform specific actions on database objects such as tables, views, or procedures.

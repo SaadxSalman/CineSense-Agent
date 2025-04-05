@@ -1,1 +1,0 @@
-To define a temporary result set that can be referenced within a SELECT, INSERT, UPDATE, or DELETE statement.

@@ -1,1 +1,0 @@
-Views can sometimes be updated directly if they are based on a single table and do not contain complex joins, aggregates, or groupings.

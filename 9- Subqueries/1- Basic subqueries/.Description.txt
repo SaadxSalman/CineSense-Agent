@@ -1,1 +1,0 @@
-A basic subquery is used to fetch data from another query, which can be used as a condition or a filter in the main query.

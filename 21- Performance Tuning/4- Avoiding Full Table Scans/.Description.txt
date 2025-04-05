@@ -1,1 +1,0 @@
-To prevent the database from scanning every row in a table, which can be slow and inefficient.

@@ -1,1 +1,0 @@
-The USE DATABASE statement selects a specific database for subsequent operations. Once a database is selected, all operations are performed on that database unless specified otherwise.

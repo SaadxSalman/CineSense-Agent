@@ -1,1 +1,0 @@
-To improve performance by dividing a large table into smaller, more manageable pieces (partitions) based on column values.

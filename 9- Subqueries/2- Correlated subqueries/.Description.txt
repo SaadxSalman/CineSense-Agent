@@ -1,1 +1,0 @@
-A correlated subquery is a subquery that references columns from the outer query. It is executed once for each row processed by the outer query.

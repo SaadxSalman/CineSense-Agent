@@ -1,1 +1,0 @@
-There isn't a specific syntax for query optimization; it involves using various techniques such as indexing, avoiding unnecessary columns in SELECT, using JOINs efficiently, and writing subqueries or nested queries effectively.

@@ -1,1 +1,0 @@
-Table-valued functions return a table data type and can be treated as a table or a view in SQL queries. They are useful for encapsulating complex query logic.

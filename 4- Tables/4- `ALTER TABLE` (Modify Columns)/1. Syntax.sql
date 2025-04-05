@@ -1,2 +1,0 @@
-ALTER TABLE Employees
-MODIFY COLUMN Salary DECIMAL(12, 2);

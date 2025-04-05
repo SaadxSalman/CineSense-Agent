@@ -1,1 +1,0 @@
-Ensures that all values in a column satisfy a specific condition.

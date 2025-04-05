@@ -1,7 +1,0 @@
-Control the visibility of changes made by one transaction to other concurrent transactions. Different isolation levels define the degree to which transactions are isolated from each other.
-
-Common Isolation Levels:
-- READ UNCOMMITTED: Allows dirty reads, where one transaction can see uncommitted changes from another.
-- READ COMMITTED: Prevents dirty reads, but non-repeatable reads and phantom reads can still occur.
-- REPEATABLE READ: Prevents dirty and non-repeatable reads but allows phantom reads.
-- SERIALIZABLE: The highest isolation level, preventing dirty, non-repeatable, and phantom reads by fully isolating transactions.

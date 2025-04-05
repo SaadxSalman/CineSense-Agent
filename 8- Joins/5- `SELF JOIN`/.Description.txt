@@ -1,1 +1,0 @@
-Joins a table with itself, often used to compare rows within the same table.

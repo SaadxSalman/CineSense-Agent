@@ -1,1 +1,0 @@
-Similar to regular tables but only exist during the session in which they are created.

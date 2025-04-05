@@ -1,1 +1,0 @@
-USE database_name;

@@ -1,1 +1,0 @@
-To control concurrent access to a table.

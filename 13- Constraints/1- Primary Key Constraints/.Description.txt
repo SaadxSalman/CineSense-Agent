@@ -1,1 +1,0 @@
-Uniquely identifies each record in a table. It ensures that no duplicate values exist in the primary key column(s) and that none of the values are NULL.

@@ -1,1 +1,0 @@
-Used to create a temporary table that exists only for the duration of a session.

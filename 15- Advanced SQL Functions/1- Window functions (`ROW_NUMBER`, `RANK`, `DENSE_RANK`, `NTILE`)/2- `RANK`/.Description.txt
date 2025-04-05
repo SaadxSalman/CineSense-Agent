@@ -1,1 +1,0 @@
-Assigns a unique rank to rows within a partition of a result set, with gaps in ranking values if there are ties.

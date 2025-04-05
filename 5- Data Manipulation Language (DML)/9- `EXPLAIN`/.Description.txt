@@ -1,1 +1,0 @@
-To obtain information about how SQL statements are executed.

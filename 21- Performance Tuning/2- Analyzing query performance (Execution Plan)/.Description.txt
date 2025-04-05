@@ -1,1 +1,0 @@
-To understand how SQL queries are being executed by the database engine and to identify bottlenecks.

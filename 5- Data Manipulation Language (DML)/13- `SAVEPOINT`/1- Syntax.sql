@@ -1,1 +1,0 @@
-SAVEPOINT savepoint_name;

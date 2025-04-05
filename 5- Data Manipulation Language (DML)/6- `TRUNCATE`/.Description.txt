@@ -1,1 +1,0 @@
-To remove all records from a table, but not the table itself.

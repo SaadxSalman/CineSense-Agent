@@ -1,1 +1,0 @@
-To remove an index when it's no longer needed, or to free up space.

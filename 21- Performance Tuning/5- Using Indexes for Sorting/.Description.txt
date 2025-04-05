@@ -1,1 +1,0 @@
-To improve the performance of queries that use ORDER BY by ensuring the columns involved are indexed.

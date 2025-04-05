@@ -1,1 +1,0 @@
-A view is a virtual table based on the result of a query. Views can simplify complex queries, encapsulate logic, and provide a layer of security by restricting access to specific data.

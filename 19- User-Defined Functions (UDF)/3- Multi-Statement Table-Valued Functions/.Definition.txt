@@ -1,1 +1,0 @@
-Similar to Table-Valued Functions, but these functions can contain multiple statements to build the result set before returning it.

@@ -1,2 +1,0 @@
-ALTER TABLE Employees
-ADD Email VARCHAR(100);

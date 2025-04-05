@@ -1,1 +1,0 @@
-BEFORE triggers are used to perform actions before an INSERT, UPDATE, or DELETE operation is executed on a table.

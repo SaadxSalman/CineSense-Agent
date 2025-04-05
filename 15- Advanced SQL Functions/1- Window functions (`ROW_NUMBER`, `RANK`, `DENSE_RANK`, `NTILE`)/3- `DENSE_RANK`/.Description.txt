@@ -1,1 +1,0 @@
-Similar to RANK(), but without gaps in the ranking values if there are ties.

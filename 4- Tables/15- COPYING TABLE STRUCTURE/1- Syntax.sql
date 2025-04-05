@@ -1,1 +1,0 @@
-CREATE TABLE NewTable LIKE OldTable;

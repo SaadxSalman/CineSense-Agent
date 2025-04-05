@@ -1,1 +1,0 @@
-ROLLUP is an extension of GROUP BY that allows for the creation of subtotals and a grand total in the aggregated data.

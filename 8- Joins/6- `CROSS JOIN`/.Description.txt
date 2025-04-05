@@ -1,1 +1,0 @@
-Returns the Cartesian product of two tables, meaning every row in the first table is paired with every row in the second table.

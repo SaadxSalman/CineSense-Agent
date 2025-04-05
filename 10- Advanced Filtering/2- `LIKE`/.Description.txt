@@ -1,1 +1,0 @@
-Used to search for a specified pattern in a column, often with wildcard characters (% for any sequence of characters and _ for any single character).

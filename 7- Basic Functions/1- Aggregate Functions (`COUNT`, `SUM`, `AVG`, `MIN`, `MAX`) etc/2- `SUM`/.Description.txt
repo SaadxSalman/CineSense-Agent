@@ -1,1 +1,0 @@
-Calculates the total sum of a numeric column.

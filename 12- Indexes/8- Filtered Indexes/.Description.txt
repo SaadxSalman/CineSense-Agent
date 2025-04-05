@@ -1,1 +1,0 @@
-A filtered index is a non-clustered index with a WHERE clause that allows for indexing a portion of the rows in a table.

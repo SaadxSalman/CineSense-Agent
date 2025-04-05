@@ -1,1 +1,0 @@
-Used to filter records that match any value in a specified list.

@@ -1,1 +1,0 @@
-Assign and remove roles to/from users, which in turn grants or revokes a set of privileges.

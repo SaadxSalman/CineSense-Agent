@@ -1,1 +1,0 @@
-To improve the efficiency of SQL queries, reducing execution time and resource usage.

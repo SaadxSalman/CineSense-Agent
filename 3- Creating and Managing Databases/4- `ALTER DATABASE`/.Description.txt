@@ -1,1 +1,0 @@
-The ALTER DATABASE statement is used to modify the characteristics of an existing database, such as changing its name or altering its settings.

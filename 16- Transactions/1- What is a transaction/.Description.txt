@@ -1,1 +1,0 @@
-A transaction is a sequence of one or more SQL operations that are executed as a single unit. Transactions ensure data integrity by following the ACID properties (Atomicity, Consistency, Isolation, Durability).

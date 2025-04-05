@@ -1,1 +1,0 @@
-Nested subqueries are subqueries within subqueries. They are used to further refine the result set by adding more layers of filtering.

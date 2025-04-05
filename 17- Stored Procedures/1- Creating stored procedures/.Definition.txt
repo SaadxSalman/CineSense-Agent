@@ -1,1 +1,0 @@
-Define a stored procedure to encapsulate a set of SQL statements that can be executed as a single unit.

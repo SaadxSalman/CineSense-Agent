@@ -1,1 +1,0 @@
-To see the SQL statement that defines a view.

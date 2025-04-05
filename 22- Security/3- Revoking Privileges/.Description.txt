@@ -1,1 +1,0 @@
-Remove previously granted privileges from a user or role, restricting their access to database objects.

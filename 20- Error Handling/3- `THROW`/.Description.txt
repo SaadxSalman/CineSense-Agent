@@ -1,1 +1,0 @@
-The THROW statement raises an exception and transfers control to the CATCH block or terminates the batch if no CATCH block is present. It's more modern and flexible compared to RAISEERROR.

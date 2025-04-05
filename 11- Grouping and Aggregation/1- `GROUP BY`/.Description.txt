@@ -1,1 +1,0 @@
-The GROUP BY clause is used to arrange identical data into groups. It is often used with aggregate functions (COUNT, SUM, AVG, MAX, MIN) to perform operations on each group of data.

@@ -1,1 +1,0 @@
-To create a trigger that is tied to a specific event like INSERT, UPDATE, or DELETE on a table or view.

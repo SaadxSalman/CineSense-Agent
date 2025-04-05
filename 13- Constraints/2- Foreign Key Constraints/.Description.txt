@@ -1,1 +1,0 @@
-Enforces a link between the data in two tables by ensuring that the value in a foreign key column corresponds to a primary key value in another table.

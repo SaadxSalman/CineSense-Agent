@@ -1,1 +1,0 @@
-To perform insert, update, or delete operations based on a condition.

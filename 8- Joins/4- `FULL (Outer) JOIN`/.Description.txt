@@ -1,1 +1,0 @@
-Returns all rows when there is a match in either left or right table. If there is no match, NULL values are returned for unmatched rows from either table.

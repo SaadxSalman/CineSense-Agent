@@ -1,1 +1,0 @@
-An index is a database object that improves the speed of data retrieval operations on a table at the cost of additional storage space. Indexes are used to quickly locate data without having to search every row in a table each time a query is run.

@@ -1,1 +1,0 @@
-LOCK TABLE table_name IN {READ | WRITE} MODE;

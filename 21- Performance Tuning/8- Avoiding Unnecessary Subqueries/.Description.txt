@@ -1,1 +1,0 @@
-To improve performance by simplifying queries and reducing the number of nested queries.

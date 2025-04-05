@@ -1,1 +1,0 @@
-SELECT DATE_FORMAT('2024-08-07', '%M %d, %Y');

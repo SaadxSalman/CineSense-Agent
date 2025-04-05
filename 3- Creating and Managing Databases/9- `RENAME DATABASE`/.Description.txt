@@ -1,1 +1,0 @@
-The RENAME DATABASE statement is used to rename an existing database. This command might not be supported in all SQL environments, so it's important to check your specific database management system's documentation.

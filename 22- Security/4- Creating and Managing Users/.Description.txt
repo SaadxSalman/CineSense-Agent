@@ -1,1 +1,0 @@
-Create new database users and manage their authentication and permissions.

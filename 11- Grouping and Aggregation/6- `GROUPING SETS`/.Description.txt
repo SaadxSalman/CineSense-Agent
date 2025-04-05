@@ -1,1 +1,0 @@
-GROUPING SETS allows you to specify multiple groupings in a single query, effectively combining several GROUP BY clauses.

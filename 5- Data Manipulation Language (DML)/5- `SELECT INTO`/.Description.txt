@@ -1,1 +1,0 @@
-To create a new table and insert data from another table.

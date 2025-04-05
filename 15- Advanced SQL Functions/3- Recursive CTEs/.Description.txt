@@ -1,1 +1,0 @@
-Allows for querying hierarchical data or performing iterative operations by referencing the CTE itself within its own definition.

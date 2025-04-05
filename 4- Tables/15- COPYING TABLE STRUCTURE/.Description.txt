@@ -1,1 +1,0 @@
-Copying the structure of an existing table without copying its data.

@@ -1,1 +1,0 @@
-The @@ERROR function returns the error number of the last T-SQL statement executed. If the last statement did not generate an error, @@ERROR returns 0.

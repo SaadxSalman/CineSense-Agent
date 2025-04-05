@@ -1,1 +1,0 @@
-Pass input values to stored procedures and optionally return output values.

@@ -1,1 +1,0 @@
-To set the characteristics of the current transaction.
