@@ -12,12 +12,16 @@ A system that goes beyond simple recommendations to actively craft a hyper-perso
 
 ## ⚙️ Tech Stack
 
-  * **Video Analysis:** [VideoMAE-v2](https://github.com/OpenGVLab/VideoMAEv2)
-  * **Audio Analysis:** [AudioCLIP](https://www.google.com/search?q=https://github.com/AndrasDeak/AudioCLIP)
-  * **Creative Writing:** [Llama-3](https://llama.meta.com/llama3/)
-  * **Multi-modal Fusion:** [Perceiver IO](https://www.google.com/search?q=https://github.com/deepmind/perceiver-io)
-  * **Backend:** Rust
-  * **Communication:** tRPC
+* **Frontend Framework:** [Next.js](https://nextjs.org/) (MERN Stack)
+* **Styling & UI:** [Tailwind CSS](https://tailwindcss.com/)
+* **Language:** [TypeScript](https://www.typescriptlang.org/) & [Rust](https://www.rust-lang.org/)
+* **Database:** [MongoDB](https://www.mongodb.com/)
+* **Backend Runtime:** [Node.js](https://nodejs.org/) & [Express](https://expressjs.com/)
+* **Video Analysis:** [VideoMAE-v2](https://github.com/OpenGVLab/VideoMAEv2)
+* **Audio Analysis:** [AudioCLIP](https://github.com/AndrasDeak/AudioCLIP)
+* **Creative Writing:** [Llama-3](https://llama.meta.com/llama3/)
+* **Multi-modal Fusion:** [Perceiver IO](https://github.com/deepmind/perceiver-io)
+* **Communication:** tRPC
 
 ## 🚀 Getting Started
 
@@ -60,6 +64,5 @@ To start the CineSense-Agent, run the main executable and provide it with user i
 ```bash
 ./target/release/cinesense-agent --user-data-stream-path /path/to/data.json
 ```
-
 
 ---
