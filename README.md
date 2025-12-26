@@ -61,10 +61,5 @@ To start the CineSense-Agent, run the main executable and provide it with user i
 ./target/release/cinesense-agent --user-data-stream-path /path/to/data.json
 ```
 
-## 🤝 Contributing
 
-We welcome contributions\! Please see our [CONTRIBUTING.md](https://www.google.com/search?q=https://github.com/saadsalmanakram/CineSense-Agent/blob/main/CONTRIBUTING.md) for details on how to get involved.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](https://www.google.com/search?q=https://github.com/saadsalmanakram/CineSense-Agent/blob/main/LICENSE) file for more details.
+---
