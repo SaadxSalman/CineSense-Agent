@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cine-bg: #08080d;
+  --color-cine-panel: #101018;
+  --color-cine-line: #23232f;
+  --color-cine-amber: #f2a33c;
+  --color-cine-rose: #e51937;
+  --color-cine-teal: #2ec4b6;
+  --color-cine-violet: #8d7bff;
+  --color-cine-text: #e8e6e3;
+  --color-cine-dim: #8b8a95;
+}
+
+html,
+body {
+  background: var(--color-cine-bg);
+  color: var(--color-cine-text);
+  min-height: 100%;
+}
+
+body {
+  background-image:
+    radial-gradient(1200px 600px at 80% -10%, rgba(141, 123, 255, 0.09), transparent),
+    radial-gradient(900px 500px at 0% 110%, rgba(242, 163, 60, 0.07), transparent);
+}
+
+/* subtle film-grain overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  z-index: 50;
+  background-image: repeating-conic-gradient(#fff 0% 0.0001%, transparent 0.0002% 0.05%);
+  mix-blend-mode: overlay;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a38;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.panel {
+  background: color-mix(in srgb, var(--color-cine-panel) 88%, transparent);
+  border: 1px solid var(--color-cine-line);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+}
+
+.mono {
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+}

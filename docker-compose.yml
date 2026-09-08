@@ -1,0 +1,74 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Python AI inference bridge (VideoMAE-v2 / AudioCLIP adapters)
+  # NVIDIA Container Toolkit: uncomment the deploy block for GPU acceleration.
+  models:
+    build: ./models
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  # Node.js orchestrator: tRPC + WebSocket + REST ingest
+  server:
+    build: ./apps/server
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - CORS_ORIGIN=http://localhost:3000
+      - MONGODB_URI=mongodb://mongo:27017/cinesense
+      - PY_INFERENCE_URL=http://models:8000
+      - LLAMA_API_KEY=${LLAMA_API_KEY:-}
+      - LLAMA_BASE_URL=${LLAMA_BASE_URL:-https://api.groq.com/openai/v1}
+      - LLAMA_MODEL=${LLAMA_MODEL:-llama-3.1-8b-instant}
+      - INTERNAL_API_KEY=${INTERNAL_API_KEY:-dev-internal-key}
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  # Next.js frontend
+  web:
+    build: ./apps/web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_SERVER_URL=http://localhost:4000
+    depends_on:
+      - server
+
+  # Rust core-engine (biometric stream simulator / JSONL reader)
+  # Run manually: docker compose --profile engine run engine \
+  #   --api-url http://server:4000 --mode simulate --session-id docker-demo
+  engine:
+    profiles: ["engine"]
+    build: ./core-engine
+    environment:
+      - INTERNAL_API_KEY=${INTERNAL_API_KEY:-dev-internal-key}
+    depends_on:
+      - server
+
+volumes:
+  mongo_data:

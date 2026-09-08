@@ -1,0 +1,20 @@
+{
+  "name": "cinesense-agent",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CineSense-Agent: emotion-driven cinematic experience generator (monorepo)",
+  "scripts": {
+    "dev:server": "npm --prefix apps/server run dev",
+    "dev:web": "npm --prefix apps/web run dev",
+    "build:server": "npm --prefix apps/server run build",
+    "build:web": "npm --prefix apps/web run build",
+    "seed": "tsx scripts/seed_concepts.ts",
+    "simulate": "tsx scripts/simulate_stream.ts",
+    "typecheck:server": "npm --prefix apps/server run typecheck"
+  },
+  "devDependencies": {
+    "@trpc/client": "^11.8.1",
+    "superjson": "^2.2.1",
+    "tsx": "^4.19.2"
+  }
+}
