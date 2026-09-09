@@ -90,45 +90,134 @@ A system that goes beyond simple recommendations to actively craft a hyper-perso
 
 ### Prerequisites
 
-  * Rust
-  * Python 3.10+
-  * Node.js (for a potential front-end)
-  * Access to the Llama-3 API
+* **Node.js 20+** & npm — orchestrator + dashboard (required)
+* Python 3.10+ — AI inference bridge *(optional; orchestrator has built-in fallbacks)*
+* Rust toolchain — core-engine *(optional; browser + simulator cover producers)*
+* Docker + NVIDIA Container Toolkit — one-command orchestration *(optional)*
+* A **Llama-3** API key from any OpenAI-compatible provider (Groq / Together / OpenRouter / Ollama) *(optional)*
+
+> **Every integration degrades gracefully.** No Mongo? In-memory store. No Llama
+> key? Deterministic local screenwriter. No Python bridge / Rust engine? The
+> browser's vision layer and the built-in simulator drive the pipeline. The
+> system is fully functional out of the box with an empty `.env`.
 
 ### Installation
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/saadsalmanakram/CineSense-Agent.git
+    git clone https://github.com/SaadxSalman/CineSense-Agent.git
     cd CineSense-Agent
     ```
-2.  **Set up the Rust backend:**
+2.  **Start the orchestrator (Node.js / tRPC):**
     ```bash
-    cargo build --release
+    cd apps/server
+    npm install
+    npm run dev            # → http://localhost:4000 (tRPC, /ws, /internal/ingest)
     ```
-3.  **Set up the Python environment:**
+    On boot it self-seeds the 36-film concept library into the vector store.
+3.  **Start the dashboard (Next.js):**
     ```bash
-    # Install required Python libraries
-    pip install -r requirements.txt
+    cd ../web
+    npm install
+    npm run dev            # → http://localhost:3000
     ```
+4.  Open **http://localhost:3000**, click **"Simulated biometrics"** (or **"Use my
+    webcam"**), watch the emotion heatmap fuse in real time, then press
+    **"synthesize my trailer"**.
 
 ### Configuration
 
-Create a `.env` file to store your API keys and configuration variables for models like Llama-3.
+Copy `.env.example` to `.env` (repo root) and fill in what you have:
+
+| Variable | Purpose | Fallback when empty |
+|---|---|---|
+| `PORT` | orchestrator port (4000) | — |
+| `MONGODB_URI` | MongoDB Atlas connection | in-memory store |
+| `LLAMA_API_KEY` / `LLAMA_BASE_URL` / `LLAMA_MODEL` | Creative Agent (Llama-3 via OpenAI-compatible API) | deterministic local screenwriter |
+| `PY_INFERENCE_URL` | Python VideoMAE/AudioCLIP bridge | built-in heuristics on Node side |
+| `INTERNAL_API_KEY` | shared secret for the Rust engine ingest | `dev-internal-key` |
+| `EMBEDDING_PROVIDER` | `local` (default) or `openai` | local hashed embeddings |
+| `NEXT_PUBLIC_SERVER_URL` | dashboard → orchestrator URL | `http://localhost:4000` |
 
 ```ini
 LLAMA_API_KEY=your_llama3_api_key
 ```
 
-### Usage
-
-To start the CineSense-Agent, run the main executable and provide it with user input, such as biometric data streams or viewing history.
+### Optional services
 
 ```bash
-./target/release/cinesense-agent --user-data-stream-path /path/to/data.json
+# Python inference bridge (VideoMAE-v2 / AudioCLIP adapters, heuristic baseline)
+python -m pip install -r models/requirements.txt
+python -m uvicorn inference_server:app --host 127.0.0.1 --port 8000
+
+# Rust core-engine (real-time capture + fusion; mirrors the TS emotion math)
+cd core-engine
+cargo run --release -- --mode simulate --session-id <dashboard-session-id>
+cargo run --release -- --mode jsonl --stream-path ./stream.jsonl   # replay a file
+cargo run --release --features opencv -- --mode camera             # real webcam
+```
+
+### Scripts & verification
+
+```bash
+npm run seed          # upload movie vectors to the configured store (Mongo workflow)
+npm run simulate      # end-to-end pipeline test over real HTTP/tRPC:
+                      # session → biometric stream → emotion fusion →
+                      # semantic retrieval → trailer synthesis → persistence
+npm run typecheck:server
+```
+
+### Docker
+
+```bash
+docker compose up --build                              # mongo + models + server + web
+docker compose --profile engine run engine \
+  --api-url http://server:4000 --mode simulate --session-id docker-demo
 ```
 
 ---
+
+## 🧠 How a mood becomes a movie
+
+```
+ multi-modal signals                 fused state                creative output
+┌───────────────────────┐   ┌──────────────────────────┐   ┌───────────────────────────────┐
+│ webcam 8×8 grid +     │   │ Emotion Agent            │   │ Semantic Retrieval            │
+│ motion energy         │   │  normalize → fuse →      │   │  embed mood query →           │
+│ (browser / Rust /     │ → │  valence · arousal ·     │ → │  cosine search over 36        │
+│  simulator)           │   │  engagement + labels     │   │  cinematic concepts           │
+├───────────────────────┤   │  (Russell circumplex)    │   ├───────────────────────────────┤
+│ heart rate · HRV ·    │   └──────────────┬───────────┘   │ Creative Agent                │
+│ skin conductance ·    │                  │ WS /ws live   │  Llama-3 → screenplay JSON    │
+│ gaze · blink · audio  │                  ▼               │  (local fallback included)    │
+└───────────────────────┘   ┌──────────────────────────┐   ├───────────────────────────────┤
+                            │ Dashboard                │   │ Synthesis Agent               │
+                            │  heatmap · circumplex ·  │ ◂ │  pacing/grade/score from      │
+                            │  trailer player · script │   │  arousal/valence → blueprint  │
+                            └──────────────────────────┘   └───────────────────────────────┘
+```
+
+1.  **Signal ingestion** — the dashboard's webcam vision layer, the Rust
+    core-engine, or the built-in simulator emit `SignalSample`s over tRPC
+    (`emotion.ingest`) or the Rust-only REST path (`POST /internal/ingest`).
+2.  **Emotion Agent** — every sample is fused into a frame (valence, arousal,
+    engagement, top-5 circumplex labels, 8×8 heatmap), kept in a rolling 30 s
+    window and broadcast over the WebSocket bus.
+3.  **Semantic Cinematic Retrieval** — the fused state becomes a mood query,
+    is embedded (local hashed n-grams by default), and searched against the
+    concept vectors (Atlas Vector Search on MongoDB, in-process cosine
+    otherwise).
+4.  **Creative Agent** — Llama-3 turns state + concepts into a validated
+    screenplay JSON; without an API key the deterministic local screenwriter
+    applies the same circumplex geometry as creative rules.
+5.  **Synthesis Agent** — the screenplay becomes a timed trailer blueprint
+    (shot types, transitions, color grade, score cues) whose pacing is a
+    direct function of the viewer's arousal, then persisted and rendered by
+    the animated CineSynth player.
+
+---
+
+
 
 To wrap everything up, here is the finalized, comprehensive directory structure for **CineSense-Agent**. This structure organizes your multi-language stack (Rust, Python, TypeScript) into a clean, modular monorepo that is ready for Docker orchestration.
 
@@ -137,46 +226,57 @@ To wrap everything up, here is the finalized, comprehensive directory structure 
 ```text
 CineSense-Agent/
 ├── apps/
-│   ├── web/                    # Next.js (Frontend)
+│   ├── web/                          # Next.js 15 dashboard (App Router)
 │   │   ├── src/
-│   │   │   ├── components/     # UI: Dashboard, VideoPlayer, EmotionChart
-│   │   │   ├── hooks/          # Custom hooks for tRPC and WebSockets
-│   │   │   ├── utils/          # tRPC client configuration
-│   │   │   └── app/            # App Router (Pages & Layouts)
-│   │   ├── tailwind.config.ts
+│   │   │   ├── app/                  # layout, providers, dashboard page, styles
+│   │   │   ├── components/           # SystemStatus, SessionControls, EmotionHeatmap,
+│   │   │   │                         #   EmotionReadout, ConceptSearch, TrailerPlayer,
+│   │   │   │                         #   ScriptView, HistoryList
+│   │   │   ├── hooks/                # useEmotionStream (WS bus), useBiometricSimulator,
+│   │   │   │                         #   useWebcamSignals (browser vision layer)
+│   │   │   └── utils/                # tRPC client — AppRouter type imported from the
+│   │   │                             #   server source (end-to-end type safety)
+│   │   ├── Dockerfile
 │   │   └── package.json
 │   │
-│   └── server/                 # Node.js/Express (Orchestrator)
+│   └── server/                       # Node.js orchestrator (tRPC + WS + REST)
 │       ├── src/
-│       │   ├── trpc/           # Router definitions & Procedures
-│       │   ├── services/       # Llama-3 API & Vector Search logic
-│       │   ├── models/         # MongoDB Mongoose schemas
-│       │   └── index.ts        # Entry point
-│       ├── tsconfig.json
+│       │   ├── trpc/                 # context + routers (health, emotion, concepts, content)
+│       │   ├── services/             # emotionAgent, retrieval, embedding, llama,
+│       │   │                         #   localScreenwriter, synthesis, inference,
+│       │   │                         #   seed, eventBus
+│       │   ├── store/                # Store interface: MemoryStore + MongoStore
+│       │   │                         #   (Atlas Vector Search w/ cosine fallback)
+│       │   ├── data/                 # 36-concept cinematic seed library
+│       │   ├── ws.ts                 # /ws real-time emotion bus
+│       │   └── index.ts              # entry: /trpc · /ws · /internal/ingest · /healthz
+│       ├── Dockerfile
 │       └── package.json
 │
-├── core-engine/                # Rust (Data Processing)
+├── core-engine/                      # Rust (Tokio) capture + fusion
 │   ├── src/
-│   │   ├── main.rs             # OpenCV loop & Buffer streaming
-│   │   ├── emotion_agent/      # Biometric normalization logic
-│   │   └── fusion/             # Perceiver IO data prep
-│   ├── Cargo.toml
-│   └── Cargo.lock
+│   │   ├── main.rs                   # CLI: --mode simulate | jsonl | camera
+│   │   ├── emotion_agent/            # normalization + fusion (mirrors the TS agent)
+│   │   ├── fusion/                   # rolling-window aggregation
+│   │   ├── sources/                  # simulator · jsonl replay · opencv camera (feature)
+│   │   ├── transport.rs              # batched ingest with retry/backoff
+│   │   └── types.rs                  # camelCase wire types (match server zod schema)
+│   ├── Dockerfile
+│   └── Cargo.toml
 │
-├── models/                     # Python (AI Inference)
-│   ├── video_mae/              # VideoMAE-v2 weights & logic
-│   ├── audioclip/              # AudioCLIP weights & logic
-│   ├── inference_server.py     # FastAPI server (the bridge)
-│   ├── requirements.txt        # AI dependencies
-│   └── Dockerfile              # GPU-enabled container config
+├── models/                           # Python AI inference bridge (FastAPI)
+│   ├── inference_server.py           # /health · /analyze/video · /analyze/audio
+│   │                                 #   (VideoMAE-v2 / AudioCLIP adapters, heuristic baseline)
+│   ├── requirements.txt
+│   └── Dockerfile                    # GPU-ready via NVIDIA Container Toolkit
 │
-├── scripts/                    # Utility scripts for data seeding
-│   └── seed_concepts.ts        # Script to upload movie vectors to MongoDB
+├── scripts/                          # Utility scripts (repo root, npm run …)
+│   ├── seed_concepts.ts              # upload movie vectors to the store
+│   └── simulate_stream.ts            # end-to-end pipeline test via tRPC client
 │
-├── .env                        # API keys & DB URIs
-├── docker-compose.yml          # Full system orchestration
-└── README.md                   # Project documentation
-
+├── .env.example                      # all config, with fallbacks documented
+├── docker-compose.yml                # mongo + models + server + web (+ engine profile)
+└── README.md
 ```
 
 ---

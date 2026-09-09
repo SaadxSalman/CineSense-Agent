@@ -167,7 +167,7 @@ export const TrailerBlueprint = z.object({
       tags: z.array(z.string()),
     }),
   ),
-  generator: z.enum(['llama-3', 'local-screenwriter']),
+  generator: z.enum(['llm', 'local-screenwriter']),
 });
 export type TrailerBlueprint = z.infer<typeof TrailerBlueprint>;
 

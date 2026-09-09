@@ -1,0 +1,14 @@
+# CineSense inference bridge — CPU-only baseline (Python 3.10+)
+fastapi>=0.115
+uvicorn>=0.34
+pydantic>=2.9
+
+# ── Optional real model backends (GPU recommended) ────────────────────────────
+# The bridge runs on heuristics without these; set ENABLE_VIDEOMAE=1 /
+# ENABLE_AUDIOCLIP=1 to activate them when installed.
+#
+# torch>=2.4
+# torchvision>=0.19
+# transformers>=4.44
+# torchaudio>=2.4          # AudioCLIP (CLAP) audio path
+# opencv-python-headless   # frame decoding for VideoMAE input

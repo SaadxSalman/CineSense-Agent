@@ -40,12 +40,12 @@ export async function generateContent(
   };
 
   let screenplay: Screenplay;
-  let generator: 'llama-3' | 'local-screenwriter' = 'local-screenwriter';
+  let generator: 'llm' | 'local-screenwriter' = 'local-screenwriter';
 
   if (isLlamaConfigured()) {
     try {
       screenplay = await generateScreenplayWithLlama(creativeInput);
-      generator = 'llama-3';
+      generator = 'llm';
     } catch (err) {
       console.warn(`[creative-agent] Llama-3 generation failed (${(err as Error).message}); using local screenwriter.`);
       screenplay = localScreenplay(state, prefs, hits, kind);
@@ -78,7 +78,7 @@ export function synthesizeBlueprint(
   _prefs: SessionPrefs,
   screenplay: Screenplay,
   hits: RetrievalHit[],
-  generator: 'llama-3' | 'local-screenwriter',
+  generator: 'llm' | 'local-screenwriter',
   kind: 'trailer' | 'short-film' | 'script',
 ): TrailerBlueprint {
   const aN = (state.arousal + 1) / 2;

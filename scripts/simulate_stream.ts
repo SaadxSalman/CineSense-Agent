@@ -110,7 +110,7 @@ async function main(): Promise<void> {
   });
   console.log(`   title      : ${content.title}`);
   console.log(`   logline    : ${content.logline}`);
-  console.log(`   generator  : ${content.generator}`);
+  console.log(`   generator  : ${content.blueprint.generator}`);
   console.log(`   runtime    : ${content.blueprint.totalDurationSec}s across ${content.blueprint.scenes.length} scenes`);
   console.log(`   grade      : ${content.blueprint.grade.name} — ${content.blueprint.grade.description}`);
   console.log(`   music      : ${content.blueprint.music.key}, ${content.blueprint.music.tempoBpm} BPM`);

@@ -18,8 +18,9 @@ export async function initStore(): Promise<Store> {
   if (CONFIG.mongodbUri) {
     try {
       const mongo = new MongoStore(CONFIG.mongodbUri);
-      // Force a connection probe so we fail fast into memory mode.
-      await mongoosePing(4000);
+      // Await the real connection promise — surfaces the actual failure
+      // reason (auth, DNS/SRV, network access) if Atlas is unreachable.
+      await mongo.ready;
       store = mongo;
     } catch (err) {
       console.warn(
@@ -38,17 +39,4 @@ export function store(): Store {
   const s = globalForStore.__cinesenseStore;
   if (!s) throw new Error('Store not initialized — call initStore() first');
   return s;
-}
-
-async function mongoosePing(timeoutMs: number): Promise<void> {
-  const mongoose = await import('mongoose');
-  const started = Date.now();
-  while (Date.now() - started < timeoutMs) {
-    if (mongoose.connection.readyState === 1) return;
-    if (mongoose.connection.readyState === 3) break; // disconnected
-    await new Promise((r) => setTimeout(r, 100));
-  }
-  if (mongoose.connection.readyState !== 1) {
-    throw new Error(`connection not established within ${timeoutMs}ms`);
-  }
 }

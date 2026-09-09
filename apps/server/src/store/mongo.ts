@@ -1,4 +1,5 @@
 import mongoose, { Schema, type Model } from 'mongoose';
+import { CONFIG } from '../config';
 import type { Concept, GeneratedContent, Session } from '../types';
 import { cosineSim } from '../lib/math';
 import type { Store } from './store';
@@ -58,14 +59,19 @@ const ContentSchema = new Schema(
 
 export class MongoStore implements Store {
   readonly kind = 'mongo' as const;
-  embeddingDim = 128;
+  /** Vector index dimensionality — must match the active embedding provider. */
+  private readonly embeddingDim: number;
 
   private SessionModel: Model<Record<string, unknown>>;
   private ConceptModel: Model<Record<string, unknown>>;
   private ContentModel: Model<Record<string, unknown>>;
   private vectorSearchIndexName = 'concept_vector_index';
 
+  /** Resolves when the connection is up (and index creation started). */
+  readonly ready: Promise<void>;
+
   constructor(uri: string) {
+    this.embeddingDim = CONFIG.embedding.dim;
     this.SessionModel =
       (mongoose.models.cinesense_sessions as Model<Record<string, unknown>>) ??
       mongoose.model('cinesense_sessions', SessionSchema);
@@ -76,12 +82,12 @@ export class MongoStore implements Store {
       (mongoose.models.cinesense_contents as Model<Record<string, unknown>>) ??
       mongoose.model('cinesense_contents', ContentSchema);
 
-    void mongoose.connect(uri, { serverSelectionTimeoutMS: 4000 }).then(
-      () => void this.ensureVectorIndex(),
-      (err) => {
+    this.ready = mongoose
+      .connect(uri, { serverSelectionTimeoutMS: 10_000 })
+      .then(() => this.ensureVectorIndex())
+      .catch((err: unknown) => {
         throw new Error(`MongoDB connection failed: ${(err as Error).message}`);
-      },
-    );
+      });
   }
 
   /** Best-effort creation of the Atlas Vector Search index (no-op on plain MongoDB). */

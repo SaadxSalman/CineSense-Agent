@@ -29,7 +29,7 @@ export function ScriptView({ content }: { content: GeneratedContent | null }) {
           <ScrollText size={14} className="text-cine-amber" /> {content.title}
         </span>
         <span className="mono rounded-full border border-cine-line px-2 py-0.5 text-[10px] text-cine-dim">
-          via {content.blueprint.generator === 'llama-3' ? 'Llama-3' : 'local screenwriter'}
+          via {content.blueprint.generator === 'llm' ? 'AI screenwriter' : 'local screenwriter'}
         </span>
       </div>
       <p className="mb-3 text-xs leading-relaxed text-cine-text/80">{content.logline}</p>

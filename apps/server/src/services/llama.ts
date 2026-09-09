@@ -84,21 +84,29 @@ function extractJson(raw: string): unknown {
 export async function generateScreenplayWithLlama(input: CreativeInput): Promise<Screenplay> {
   if (!isLlamaConfigured()) throw new Error('LLAMA_API_KEY not configured');
 
+  const body: Record<string, unknown> = {
+    model: CONFIG.llama.model,
+    temperature: 0.9,
+    max_tokens: 6000,
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user', content: userPrompt(input) },
+    ],
+  };
+  // Reasoning-family models (gpt-oss, o1/o3) spend tokens "thinking" before
+  // answering; keep that cheap so message.content carries the JSON. Other
+  // providers/models ignore the parameter.
+  if (/gpt-oss|^o[13]/.test(CONFIG.llama.model)) {
+    body.reasoning_effort = 'low';
+  }
+
   const res = await fetch(`${CONFIG.llama.baseUrl}/chat/completions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${CONFIG.llama.apiKey}`,
     },
-    body: JSON.stringify({
-      model: CONFIG.llama.model,
-      temperature: 0.9,
-      max_tokens: 2400,
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userPrompt(input) },
-      ],
-    }),
+    body: JSON.stringify(body),
     signal: AbortSignal.timeout(CONFIG.llama.timeoutMs),
   });
 

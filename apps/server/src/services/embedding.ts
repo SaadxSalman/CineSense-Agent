@@ -72,9 +72,15 @@ export async function embed(text: string): Promise<EmbedResult> {
         if (Array.isArray(vector) && vector.length > 0) {
           return { vector, provider: 'openai' };
         }
+      } else {
+        console.warn(
+          `[embeddings] OpenAI embeddings responded ${res.status} — falling back to local provider`,
+        );
       }
-    } catch {
-      // fall through to local
+    } catch (err) {
+      console.warn(
+        `[embeddings] OpenAI embeddings unreachable (${(err as Error).message}) — falling back to local provider`,
+      );
     }
   }
 
