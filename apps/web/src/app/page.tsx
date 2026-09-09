@@ -38,8 +38,14 @@ export default function Dashboard() {
     { enabled: session !== null },
   );
 
+  const utils = trpc.useUtils();
   const generate = trpc.content.generate.useMutation({
-    onSuccess: (c) => setSelected(c),
+    onSuccess: (c) => {
+      setSelected(c);
+      // Refresh the generated-pieces list for the current session.
+      void utils.content.list.invalidate();
+      void utils.videos.list.invalidate();
+    },
   });
 
   // Prefer live WS frames; fall back to the polled aggregate for the heatmap.
