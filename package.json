@@ -6,6 +6,8 @@
   "scripts": {
     "dev:server": "npm --prefix apps/server run dev",
     "dev:web": "npm --prefix apps/web run dev",
+    "start:server": "npm --prefix apps/server run start",
+    "start:web": "npm --prefix apps/web run start",
     "build:server": "npm --prefix apps/server run build",
     "build:web": "npm --prefix apps/web run build",
     "seed": "tsx scripts/seed_concepts.ts",
