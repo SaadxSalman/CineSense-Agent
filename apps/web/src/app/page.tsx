@@ -10,6 +10,7 @@ import { ConceptSearch } from '@/components/ConceptSearch';
 import { TrailerPlayer } from '@/components/TrailerPlayer';
 import { ScriptView } from '@/components/ScriptView';
 import { HistoryList } from '@/components/HistoryList';
+import { VideoScan } from '@/components/VideoScan';
 import { useEmotionStream } from '@/hooks/useEmotionStream';
 import { useBiometricSimulator } from '@/hooks/useBiometricSimulator';
 import { useWebcamSignals } from '@/hooks/useWebcamSignals';
@@ -184,6 +185,11 @@ export default function Dashboard() {
             />
           </div>
         </section>
+      </div>
+
+      {/* Video Scan — analyze the emotions inside any uploaded video */}
+      <div className="mt-4">
+        <VideoScan sessionId={session?.sessionId ?? null} onGenerated={setSelected} />
       </div>
 
       <footer className="mono mt-8 pb-4 text-center text-[10px] text-cine-dim/70">

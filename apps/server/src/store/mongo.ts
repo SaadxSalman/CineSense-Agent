@@ -1,6 +1,6 @@
 import mongoose, { Schema, type Model } from 'mongoose';
 import { CONFIG } from '../config';
-import type { Concept, GeneratedContent, Session } from '../types';
+import type { Concept, GeneratedContent, Session, VideoAnalysisJob } from '../types';
 import { cosineSim } from '../lib/math';
 import type { Store } from './store';
 
@@ -57,6 +57,23 @@ const ContentSchema = new Schema(
   { versionKey: false },
 );
 
+const VideoJobSchema = new Schema(
+  {
+    _id: { type: String, required: true },
+    name: { type: String, required: true },
+    durationSec: { type: Number, required: true },
+    sizeBytes: { type: Number, default: 0 },
+    status: { type: String, enum: ['analyzing', 'complete', 'failed'], default: 'analyzing' },
+    progress: { type: Number, default: 0 },
+    totalSamples: { type: Number, default: 1 },
+    points: { type: [Schema.Types.Mixed], default: [] },
+    summary: { type: Schema.Types.Mixed },
+    createdAt: { type: Number, required: true },
+    completedAt: { type: Number },
+  },
+  { versionKey: false },
+);
+
 export class MongoStore implements Store {
   readonly kind = 'mongo' as const;
   /** Vector index dimensionality — must match the active embedding provider. */
@@ -65,6 +82,7 @@ export class MongoStore implements Store {
   private SessionModel: Model<Record<string, unknown>>;
   private ConceptModel: Model<Record<string, unknown>>;
   private ContentModel: Model<Record<string, unknown>>;
+  private VideoJobModel: Model<Record<string, unknown>>;
   private vectorSearchIndexName = 'concept_vector_index';
 
   /** Resolves when the connection is up (and index creation started). */
@@ -81,6 +99,9 @@ export class MongoStore implements Store {
     this.ContentModel =
       (mongoose.models.cinesense_contents as Model<Record<string, unknown>>) ??
       mongoose.model('cinesense_contents', ContentSchema);
+    this.VideoJobModel =
+      (mongoose.models.cinesense_videojobs as Model<Record<string, unknown>>) ??
+      mongoose.model('cinesense_videojobs', VideoJobSchema);
 
     this.ready = mongoose
       .connect(uri, { serverSelectionTimeoutMS: 10_000 })
@@ -234,6 +255,34 @@ export class MongoStore implements Store {
   private toContent(doc: GeneratedContent & { _id: string }): GeneratedContent {
     const { _id, ...rest } = doc;
     return { ...rest, contentId: _id };
+  }
+
+  async createVideoJob(job: VideoAnalysisJob): Promise<void> {
+    await this.VideoJobModel.create({ ...job, _id: job.jobId });
+  }
+
+  async getVideoJob(id: string): Promise<VideoAnalysisJob | null> {
+    const doc = (await this.VideoJobModel.findById(id).lean()) as unknown as
+      | (VideoAnalysisJob & { _id: string })
+      | null;
+    return doc ? this.toVideoJob(doc) : null;
+  }
+
+  async updateVideoJob(id: string, patch: Partial<VideoAnalysisJob>): Promise<void> {
+    await this.VideoJobModel.updateOne({ _id: id }, { $set: patch });
+  }
+
+  async listVideoJobs(limit: number): Promise<VideoAnalysisJob[]> {
+    const docs = (await this.VideoJobModel.find()
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .lean()) as unknown as Array<VideoAnalysisJob & { _id: string }>;
+    return docs.map((d) => this.toVideoJob(d));
+  }
+
+  private toVideoJob(doc: VideoAnalysisJob & { _id: string }): VideoAnalysisJob {
+    const { _id, ...rest } = doc;
+    return { ...rest, jobId: _id, points: rest.points ?? [], summary: rest.summary ?? undefined };
   }
 }
 

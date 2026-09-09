@@ -1,4 +1,4 @@
-import type { Concept, GeneratedContent, Session } from '../types';
+import type { Concept, GeneratedContent, Session, VideoAnalysisJob } from '../types';
 
 /**
  * Persistence abstraction. The same interface is implemented twice:
@@ -21,4 +21,10 @@ export interface Store {
   saveContent(content: GeneratedContent): Promise<void>;
   getContent(id: string): Promise<GeneratedContent | null>;
   listContent(sessionId: string | undefined, limit: number): Promise<GeneratedContent[]>;
+
+  createVideoJob(job: VideoAnalysisJob): Promise<void>;
+  getVideoJob(id: string): Promise<VideoAnalysisJob | null>;
+  updateVideoJob(id: string, patch: Partial<VideoAnalysisJob>): Promise<void>;
+  listVideoJobs(limit: number): Promise<VideoAnalysisJob[]>;
 }
+

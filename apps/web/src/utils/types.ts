@@ -14,4 +14,9 @@ export type {
   Session,
   SessionPrefs,
   GeneratedContent,
+  VideoSample,
+  VideoEmotionPoint,
+  VideoPeak,
+  VideoSummary,
+  VideoAnalysisJob,
 } from '../../../../apps/server/src/types';

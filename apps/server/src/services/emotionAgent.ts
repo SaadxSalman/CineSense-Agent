@@ -36,6 +36,18 @@ const ANCHORS: CircumplexAnchor[] = [
   { emotion: 'angry', v: -0.75, a: 0.85 },
 ];
 
+/** Project (valence, arousal) onto the circumplex → top-k emotion labels. */
+export function circumplexLabels(valence: number, arousal: number, topK = 5): EmotionLabel[] {
+  const dists = ANCHORS.map((an) => Math.hypot(valence - an.v, arousal - an.a));
+  const weights = softmaxDist(dists, 0.35);
+  return ANCHORS.map((an, i) => ({
+    emotion: an.emotion,
+    weight: round(weights[i] ?? 0, 4),
+  }))
+    .sort((x, y) => y.weight - x.weight)
+    .slice(0, topK);
+}
+
 /** Fused computation for a single sample. All missing signals are skipped gracefully. */
 export function fuseSample(sample: SignalSample, source: string, ts: number): EmotionFrame {
   /* ── Arousal: physiological + behavioral activation ── */
@@ -81,14 +93,7 @@ export function fuseSample(sample: SignalSample, source: string, ts: number): Em
   const engagement = engParts.length > 0 ? clamp(mean(engParts), 0, 1) : 0.5;
 
   /* ── Discrete labels via circumplex projection ── */
-  const dists = ANCHORS.map((an) => Math.hypot(valence - an.v, arousal - an.a));
-  const weights = softmaxDist(dists, 0.35);
-  const labels: EmotionLabel[] = ANCHORS.map((an, i) => ({
-    emotion: an.emotion,
-    weight: round(weights[i] ?? 0, 4),
-  }))
-    .sort((x, y) => y.weight - x.weight)
-    .slice(0, 5);
+  const labels = circumplexLabels(valence, arousal, 5);
 
   /* ── Heatmap: provided by the vision layer, or synthesized from state ── */
   const heatmap = sample.heatmap ?? synthesizeHeatmap(valence, arousal, engagement);

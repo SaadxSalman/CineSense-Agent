@@ -232,3 +232,69 @@ export const GeneratedContent = z.object({
 });
 export type GeneratedContent = z.infer<typeof GeneratedContent>;
 
+/* ───────────────────────── Video emotion analysis ────────────────────────── */
+
+/** One observation extracted from a video by the browser's decoder layer. */
+export const VideoSample = z.object({
+  tSec: z.number().min(0).max(7200),
+  grid: z.array(unit).length(192), // 16x12 grayscale, row-major
+  avgR: unit,
+  avgG: unit,
+  avgB: unit,
+  saturation: unit,
+  motionEnergy: unit,
+  audio: z
+    .object({
+      loudness: unit, // RMS of the window around tSec
+      brightness: unit, // zero-crossing-rate proxy for spectral brightness
+    })
+    .optional(),
+});
+export type VideoSample = z.infer<typeof VideoSample>;
+
+/** Fused emotion for one instant of the video. */
+export const VideoEmotionPoint = z.object({
+  tSec: z.number().min(0),
+  valence: unitish,
+  arousal: unitish,
+  engagement: unit,
+  labels: z.array(EmotionLabel),
+  heatmap: z.array(unit).length(64), // 8x8 grid for UI reuse
+  motionEnergy: unit,
+  palette: z.object({ r: unit, g: unit, b: unit }),
+});
+export type VideoEmotionPoint = z.infer<typeof VideoEmotionPoint>;
+
+export const VideoPeak = z.object({
+  tSec: z.number(),
+  label: z.string(),
+  intensity: unit,
+});
+export type VideoPeak = z.infer<typeof VideoPeak>;
+
+export const VideoSummary = z.object({
+  dominant: z.string(),
+  valence: unitish,
+  arousal: unitish,
+  engagement: unit,
+  labels: z.array(EmotionLabel),
+  peaks: z.array(VideoPeak).max(5),
+});
+export type VideoSummary = z.infer<typeof VideoSummary>;
+
+export const VideoAnalysisJob = z.object({
+  jobId: z.string(),
+  name: z.string().max(160),
+  durationSec: z.number().min(0).max(7200),
+  sizeBytes: z.number().min(0),
+  status: z.enum(['analyzing', 'complete', 'failed']),
+  progress: unit,
+  totalSamples: z.number().int().min(1).max(400),
+  points: z.array(VideoEmotionPoint).max(400).default([]),
+  summary: VideoSummary.optional(),
+  createdAt: z.number().int(),
+  completedAt: z.number().int().optional(),
+});
+export type VideoAnalysisJob = z.infer<typeof VideoAnalysisJob>;
+
+

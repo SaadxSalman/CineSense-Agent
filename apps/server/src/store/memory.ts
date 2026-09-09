@@ -1,4 +1,4 @@
-import type { Concept, GeneratedContent, Session } from '../types';
+import type { Concept, GeneratedContent, Session, VideoAnalysisJob } from '../types';
 import { cosineSim } from '../lib/math';
 import type { Store } from './store';
 
@@ -12,6 +12,7 @@ export class MemoryStore implements Store {
   private sessions = new Map<string, Session>();
   private concepts = new Map<string, Concept & { embedding: number[] }>();
   private contents = new Map<string, GeneratedContent>();
+  private videoJobs = new Map<string, VideoAnalysisJob>();
 
   async createSession(session: Session): Promise<void> {
     this.sessions.set(session.sessionId, { ...session });
@@ -69,5 +70,26 @@ export class MemoryStore implements Store {
       .sort((a, b) => b.createdAt - a.createdAt)
       .slice(0, limit);
     return all.map((c) => ({ ...c }));
+  }
+
+  async createVideoJob(job: VideoAnalysisJob): Promise<void> {
+    this.videoJobs.set(job.jobId, structuredClone(job));
+  }
+
+  async getVideoJob(id: string): Promise<VideoAnalysisJob | null> {
+    const job = this.videoJobs.get(id);
+    return job ? structuredClone(job) : null;
+  }
+
+  async updateVideoJob(id: string, patch: Partial<VideoAnalysisJob>): Promise<void> {
+    const job = this.videoJobs.get(id);
+    if (job) Object.assign(job, structuredClone(patch));
+  }
+
+  async listVideoJobs(limit: number): Promise<VideoAnalysisJob[]> {
+    return [...this.videoJobs.values()]
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, limit)
+      .map((j) => structuredClone(j));
   }
 }
